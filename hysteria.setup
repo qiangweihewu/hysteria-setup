@@ -1,0 +1,54 @@
+#!/bin/bash
+INSTALL_PATH=$HOME/hysteria
+BINARY_PATH=$INSTALL_PATH/hysteria-linux-amd64
+SERVICE_PATH=/etc/systemd/system/hysteria.service
+if [[ ! -d $INSTALL_PATH ]] then
+	mkdir $INSTALL_PATH
+fi
+if [[ ! -f $BINARY_PATH ]] then
+	wget -P $INSTALL_PATH https://github.com/HyNetwork/hysteria/releases/download/v0.8.6/hysteria-linux-amd64 
+fi
+openssl req -newkey rsa:2048 -nodes -keyout $INSTALL_PATH/my.key -x509 -days 365 -out $INSTALL_PATH/my.crt
+cat <<-EOF > $PATH1/config.json
+{
+  "listen": ":20000",
+  "cert": "/home/silence/hysteria/my.crt", 
+  "key": "/home/silence/hysteria/my.key", 
+  "obfs": "Hello Hysteria",
+  "up_mbps": 1000,
+  "down_mbps": 1000,
+  "obfs": "Hello Hysteria",
+  "auth": { 
+    "mode": "password", 
+    "config": {
+      "password": "Hello Hysteria"
+    }
+  },
+  "alpn": "ayaya",
+  "prometheus_listen": ":8080", 
+  "recv_window_conn": 65536000,
+  "recv_window_client": 262144000,
+  "max_conn_client": 4096,
+  "disable_mtu_discovery": false 
+}
+EOF
+chown nobody.nogroup $INSTALL_PATH -R
+cat <<-EOF > $SERVICE_PATH
+[Unit]
+Description=Hysteria Service
+Documentation=https://www.hysteria.org/
+After=network.target nss-lookup.target
+[Service]
+User=nobody
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+ExecStart=$BINARY_PATH -config $INSTALL_PATH/config.json server
+Restart=on-failure
+RestartPreventExitStatus=23
+LimitNOFILE=102400
+[Install]
+WantedBy=multi-user.target
+EOF
+sudo systemcl enable hysteria.service
+sudo systemctl restart hysteria.service
