@@ -53,5 +53,6 @@ WantedBy=multi-user.target
 EOF
 sudo cp -rf $SERVICE_PATH /etc/systemd/system/
 sudo chown nobody.nogroup $INSTALL_PATH -R
+sudo chmod +x $BINARY_PATH
 sudo systemctl enable hysteria.service
 sudo systemctl restart hysteria.service
