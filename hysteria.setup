@@ -1,7 +1,7 @@
 #!/bin/bash
 INSTALL_PATH=$HOME/hysteria
 BINARY_PATH=$INSTALL_PATH/hysteria-linux-amd64
-SERVICE_PATH=/etc/systemd/system/hysteria.service
+SERVICE_PATH=$INSTALL_PATH/hysteria.service
 if [ ! -d $INSTALL_PATH ]
 then
 	mkdir $INSTALL_PATH
@@ -11,7 +11,7 @@ then
 	wget -P $INSTALL_PATH https://github.com/HyNetwork/hysteria/releases/download/v0.8.6/hysteria-linux-amd64
 fi
 openssl req -newkey rsa:2048 -nodes -keyout $INSTALL_PATH/my.key -x509 -days 365 -out $INSTALL_PATH/my.crt
-cat <<-EOF > $PATH1/config.json
+cat <<-EOF > $INSTALL_PATH/config.json
 {
   "listen": ":20000",
   "cert": "$INSTALL_PATH/my.crt", 
@@ -34,7 +34,7 @@ cat <<-EOF > $PATH1/config.json
   "disable_mtu_discovery": false 
 }
 EOF
-chown nobody.nogroup $INSTALL_PATH -R
+sudo chown nobody.nogroup $INSTALL_PATH -R
 cat <<-EOF > $SERVICE_PATH
 [Unit]
 Description=Hysteria Service
@@ -52,5 +52,6 @@ LimitNOFILE=102400
 [Install]
 WantedBy=multi-user.target
 EOF
-sudo systemcl enable hysteria.service
+sudo cp -rf $SERVICE_PATH /etc/systemd/system/
+sudo systemctl enable hysteria.service
 sudo systemctl restart hysteria.service
