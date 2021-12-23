@@ -34,7 +34,6 @@ cat <<-EOF > $INSTALL_PATH/config.json
   "disable_mtu_discovery": false 
 }
 EOF
-sudo chown nobody.nogroup $INSTALL_PATH -R
 cat <<-EOF > $SERVICE_PATH
 [Unit]
 Description=Hysteria Service
@@ -53,5 +52,6 @@ LimitNOFILE=102400
 WantedBy=multi-user.target
 EOF
 sudo cp -rf $SERVICE_PATH /etc/systemd/system/
+sudo chown nobody.nogroup $INSTALL_PATH -R
 sudo systemctl enable hysteria.service
 sudo systemctl restart hysteria.service
