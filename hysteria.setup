@@ -8,7 +8,7 @@ then
 fi
 if [ ! -f $BINARY_PATH ]
 then
-	wget -P $INSTALL_PATH https://github.com/HyNetwork/hysteria/releases/download/v0.8.6/hysteria-linux-amd64
+	wget -P $INSTALL_PATH https://github.com/HyNetwork/hysteria/releases/download/v0.9.1/hysteria-linux-amd64
 fi
 openssl req -newkey rsa:2048 -nodes -keyout $INSTALL_PATH/my.key -x509 -days 365 -out $INSTALL_PATH/my.crt
 cat <<-EOF > $INSTALL_PATH/config.json
