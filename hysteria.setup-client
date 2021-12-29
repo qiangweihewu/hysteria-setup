@@ -1,5 +1,5 @@
 #!/bin/bash
-INSTALL_PATH=$HOME/hysteria
+INSTALL_PATH=$HOME/env/hysteria
 BINARY_PATH=$INSTALL_PATH/hysteria-linux-amd64
 SERVICE_PATH=$INSTALL_PATH/hysteria.service
 SERVICE_V6_PATH=$INSTALL_PATH/hysteriav6.service
